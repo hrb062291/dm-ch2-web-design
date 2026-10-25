@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Design (Desktop and Mobile) — Chapter 2</title>
+<meta name="description" content="Digital Marketing Essentials, Chapter 2: web design frameworks, A/B testing, web page elements, landing pages and conversion rate optimization.">
+<style>
+:root{
+  --bg:#f6f7fb; --surface:#ffffff; --surface-2:#eef1f7; --ink:#0f1b2d; --muted:#56627a; --line:#dde2ec;
+  --accent:#1f5fd1; --accent-ink:#ffffff; --accent-soft:#e6eefc;
+  --teal:#0b8f7c; --teal-soft:#e3f5f2; --amber:#a5670f; --amber-soft:#fdf3e2;
+  --red:#c2410c; --red-soft:#fdece4; --purple:#6d3fc0; --purple-soft:#f0eafb;
+  --shadow:0 1px 2px rgba(15,27,45,.06),0 4px 16px rgba(15,27,45,.05);
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d131d; --surface:#151d2a; --surface-2:#1c2636; --ink:#e8edf6; --muted:#9aa6bc; --line:#2a3548;
+    --accent:#6c9cf5; --accent-ink:#0d131d; --accent-soft:#1c2a45;
+    --teal:#3cc7b1; --teal-soft:#14302c; --amber:#e7a94a; --amber-soft:#33281a;
+    --red:#f08a5d; --red-soft:#3a2219; --purple:#a988ec; --purple-soft:#2a2240;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d131d; --surface:#151d2a; --surface-2:#1c2636; --ink:#e8edf6; --muted:#9aa6bc; --line:#2a3548;
+  --accent:#6c9cf5; --accent-ink:#0d131d; --accent-soft:#1c2a45;
+  --teal:#3cc7b1; --teal-soft:#14302c; --amber:#e7a94a; --amber-soft:#33281a;
+  --red:#f08a5d; --red-soft:#3a2219; --purple:#a988ec; --purple-soft:#2a2240;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em}
+h2{font-size:1.75rem;letter-spacing:-.01em}
+h3{font-size:1.15rem;margin-top:1.6em}
+p{margin:0 0 1em}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+/* nav */
+nav.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;gap:6px;height:54px;overflow-x:auto;scrollbar-width:none}
+nav.top .wrap::-webkit-scrollbar{display:none}
+nav.top a{white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.88rem;padding:6px 10px;border-radius:8px}
+nav.top a:hover{background:var(--surface-2);color:var(--ink)}
+nav.top a.brand{font-weight:700;color:var(--ink);margin-right:6px}
+#themeBtn{margin-left:auto;flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:1rem}
+/* hero */
+header.hero{padding:56px 0 28px}
+.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:10px}
+.hero h1{font-size:clamp(2.1rem,5vw,3.2rem);letter-spacing:-.02em;margin-bottom:14px}
+.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:720px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.88rem;text-decoration:none;color:var(--ink)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+/* sections */
+section{padding:44px 0;border-top:1px solid var(--line)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:6px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.card h4{margin-bottom:6px;font-size:1rem}
+.card p:last-child,.card ul:last-child{margin-bottom:0}
+.card.tint-blue{background:var(--accent-soft);border-color:transparent;box-shadow:none}
+.card.tint-teal{background:var(--teal-soft);border-color:transparent;box-shadow:none}
+.card.tint-purple{background:var(--purple-soft);border-color:transparent;box-shadow:none}
+.card.tint-amber{background:var(--amber-soft);border-color:transparent;box-shadow:none}
+ul.clean{padding-left:1.1em;margin:0 0 1em}
+ul.clean li{margin:.2em 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:6px;background:var(--surface-2);color:var(--muted)}
+.callout{border-left:4px solid var(--amber);background:var(--amber-soft);padding:14px 18px;border-radius:0 12px 12px 0;margin:18px 0}
+.callout b.lbl{color:var(--amber);text-transform:uppercase;font-size:.75rem;letter-spacing:.08em;display:block;margin-bottom:4px}
+.callout ul{margin:.3em 0 0;padding-left:1.1em}
+.keyidea{border-left:4px solid var(--accent);background:var(--accent-soft);padding:14px 18px;border-radius:0 12px 12px 0;margin:18px 0;font-weight:500}
+.case{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden;box-shadow:var(--shadow);margin:18px 0}
+.case .head{padding:12px 20px;background:var(--surface-2);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.case .head strong{font-size:1.02rem}
+.case .body{padding:18px 20px}
+/* steps */
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s;display:grid;gap:8px}
+ol.steps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+ol.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:.85rem;display:grid;place-items:center}
+/* widget */
+.widget{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin:20px 0}
+.widget h3{margin-top:0}
+.widget .sub{color:var(--muted);font-size:.92rem;margin-top:-4px}
+.ctrl{display:grid;grid-template-columns:170px 1fr 80px;gap:12px;align-items:center;margin:10px 0}
+.ctrl label{font-size:.9rem;font-weight:600}
+.ctrl output{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+input[type=range]{width:100%;accent-color:var(--accent)}
+select,input[type=number],input[type=text]{font:inherit;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;width:100%}
+button.btn{font:inherit;font-weight:600;border:0;background:var(--accent);color:var(--accent-ink);padding:9px 16px;border-radius:9px;cursor:pointer}
+button.ghost{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:9px;cursor:pointer}
+.result{margin-top:14px;padding:14px;border-radius:10px;background:var(--surface-2)}
+.meter{height:16px;background:var(--line);border-radius:8px;overflow:hidden;margin:6px 0}
+.meter div{height:100%;background:linear-gradient(90deg,var(--teal),var(--accent));transition:width .25s}
+.big{font-size:1.6rem;font-weight:800;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+.win{color:var(--teal);font-weight:700}
+tr.hl td{background:var(--accent-soft)}
+/* yes/no */
+.yesno{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.yesno .no{background:var(--red-soft);border-radius:12px;padding:14px 16px}
+.yesno .yes{background:var(--teal-soft);border-radius:12px;padding:14px 16px}
+.yesno h4{margin-bottom:6px}
+/* option pills */
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.opts button{font:inherit;font-size:.9rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer}
+.opts button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+/* checklist */
+.checks{display:grid;gap:8px}
+.checks label{display:flex;gap:10px;align-items:flex-start;font-size:.94rem;cursor:pointer;background:var(--surface-2);border-radius:9px;padding:9px 12px}
+.checks input{margin-top:4px;accent-color:var(--accent);flex:none}
+.checks small{display:block;color:var(--muted);font-size:.84rem}
+/* mock page */
+.mock{border:2px solid var(--ink);border-radius:12px;background:var(--surface);overflow:hidden;font-size:.82rem}
+.mock .bar{display:flex;gap:5px;padding:6px 10px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.mock .bar i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.mock .pg{padding:12px;display:grid;gap:8px}
+.mock .blk{border:1px dashed var(--line);border-radius:8px;padding:8px 10px;background:var(--surface-2);color:var(--muted)}
+.hot{cursor:pointer;border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--surface);color:var(--ink);font:inherit;font-size:.82rem;text-align:left;transition:border-color .15s,background .15s}
+.hot:hover{border-color:var(--accent)}
+.hot.on{border-color:var(--accent);background:var(--accent-soft)}
+.hot.found{border-color:var(--teal)}
+/* hero preview */
+.preview{border:1px solid var(--line);border-radius:12px;padding:22px;background:linear-gradient(135deg,var(--accent-soft),var(--teal-soft));margin-top:12px}
+.preview .ph{font-size:1.5rem;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.preview .ps{color:var(--muted);margin-bottom:14px}
+.preview .pc{display:inline-block;background:var(--accent);color:var(--accent-ink);font-weight:700;padding:9px 16px;border-radius:9px}
+.verdict{display:grid;gap:6px;margin-top:12px}
+.verdict div{display:flex;gap:8px;align-items:flex-start;font-size:.92rem}
+.verdict .ok{color:var(--teal);font-weight:800}
+.verdict .bad{color:var(--red);font-weight:800}
+/* responsive frame */
+.frame{margin:12px auto 0;border:2px solid var(--ink);border-radius:14px;padding:10px;background:var(--surface);transition:max-width .35s}
+.frame .layout{display:grid;gap:8px;grid-template-columns:1fr}
+.frame.w-tab .layout{grid-template-columns:1fr 1fr}
+.frame.w-desk .layout{grid-template-columns:2fr 1fr 1fr}
+.frame .item{border-radius:8px;padding:10px;font-size:.82rem;font-weight:600;color:#fff}
+.frame .item small{display:block;font-weight:400;opacity:.9}
+.frame .span{grid-column:1/-1}
+.frame .extra{display:none}
+.frame.w-tab .extra.t,.frame.w-desk .extra{display:block}
+/* phone mocks for activities */
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+.ab .side{text-align:center}
+.ab .side b{display:block;margin-bottom:6px}
+.phone{max-width:190px;margin:0 auto;border:3px solid var(--ink);border-radius:20px;padding:8px;background:var(--surface);text-align:left;font-size:.68rem}
+.phone .ship{background:#111;color:#fff;text-align:center;padding:3px;border-radius:4px;font-size:.6rem;margin-bottom:6px}
+.phone .img{background:var(--surface-2);border-radius:6px;display:grid;place-items:center;color:var(--muted);font-size:.62rem}
+.phone .t{font-weight:700;text-align:center;margin:4px 0 0}
+.phone .pr{text-align:center;color:var(--muted)}
+.phone .b{background:#222;color:#fff;text-align:center;border-radius:4px;padding:3px;margin:3px 0}
+.phone .b.out{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.phone .b.prime{background:#1a8cff}
+.phone .g2x{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.phone .sw{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin:4px 0}
+.phone .sw span{border:1px solid var(--line);border-radius:3px;padding:1px 4px;font-size:.56rem}
+.guess{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.reveal{display:none;margin-top:12px}
+.done .reveal{display:block}
+.pill{display:inline-block;font-weight:700;border-radius:999px;padding:2px 10px;font-size:.85rem}
+.pill.up{background:var(--teal-soft);color:var(--teal)}
+.pill.down{background:var(--red-soft);color:var(--red)}
+/* quiz */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin:12px 0}
+.q p.stem{font-weight:600;margin-bottom:10px}
+.q .choices{display:grid;gap:8px}
+.q button.c{font:inherit;text-align:left;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer}
+.q button.c:disabled{cursor:default}
+.q button.c.right{background:var(--teal-soft);border-color:var(--teal);font-weight:600}
+.q button.c.wrong{background:var(--red-soft);border-color:var(--red)}
+.q .exp{display:none;margin-top:10px;font-size:.92rem;color:var(--muted)}
+.q.done .exp{display:block}
+.score{position:sticky;bottom:12px;display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 16px;box-shadow:var(--shadow);margin-top:16px}
+footer{padding:36px 0 60px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+@media (max-width:600px){
+  .ctrl{grid-template-columns:1fr 70px}.ctrl label{grid-column:1/-1}
+  .yesno{grid-template-columns:1fr}
+  .ab{grid-template-columns:1fr 1fr;gap:8px}
+  .frame.w-desk .layout{grid-template-columns:1fr 1fr}
+  section{padding:34px 0}
+}
+</style>
+</head>
+<body>
+
+<nav class="top" aria-label="Chapter sections">
+  <div class="wrap">
+    <a class="brand" href="#top">Ch 2</a>
+    <a href="#frameworks">Frameworks</a>
+    <a href="#usability">Usability</a>
+    <a href="#ccd">CCD</a>
+    <a href="#three">3 Questions</a>
+    <a href="#segments">Segments</a>
+    <a href="#mobile">Mobile First</a>
+    <a href="#cro">CRO</a>
+    <a href="#results">Results</a>
+    <a href="#elements">Elements</a>
+    <a href="#landing">Landing Pages</a>
+    <a href="#match">Ad Match</a>
+    <a href="#activities">Activities</a>
+    <a href="#quiz">Quiz</a>
+    <button id="themeBtn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+  <header class="hero">
+    <div class="eyebrow">Digital Marketing · Chapter 2</div>
+    <h1>Web Design (Desktop and Mobile)</h1>
+    <p class="lead">Your website is where every other channel sends people. Search, display, email and social all end with a click to a page, and that page decides whether the click turns into a customer. This chapter is about designing pages that convert, and testing them so you know they do.</p>
+    <p style="font-weight:600;margin:18px 0 4px">Learning objectives</p>
+    <div class="grid g2" style="margin-top:8px">
+      <div class="card"><span class="tag">01</span><p style="margin:8px 0 0">Use several design philosophies to design and revise web pages that maximize conversion rate.</p></div>
+      <div class="card"><span class="tag">02</span><p style="margin:8px 0 0">Identify the web page elements that should be reviewed and decided on when designing a page.</p></div>
+      <div class="card"><span class="tag">03</span><p style="margin:8px 0 0">List the dimensions on which an ad and its landing page should match to encourage conversion.</p></div>
+      <div class="card"><span class="tag">04</span><p style="margin:8px 0 0">Describe the different types of landing pages.</p></div>
+    </div>
+  </header>
+</div>
+
+<!-- FRAMEWORKS -->
+<section id="frameworks">
+  <div class="wrap">
+    <div class="kicker">The big picture</div>
+    <h2>Five web design frameworks</h2>
+    <p>These aren't competing theories. Each one is a different lens on the same page. Good designers run a page through all five, like a checklist.</p>
+    <div class="grid g3">
+      <a class="card tint-blue" href="#usability" style="text-decoration:none;color:inherit"><h4>1 · Design for usability</h4><p>Can people use the site without thinking about it?</p></a>
+      <a class="card tint-teal" href="#ccd" style="text-decoration:none;color:inherit"><h4>2 · Conversion-centered design</h4><p>Does every part of the page push toward one goal?</p></a>
+      <a class="card tint-purple" href="#three" style="text-decoration:none;color:inherit"><h4>3 · Three questions</h4><p>Can a visitor tell what you offer, why you, and what to do next?</p></a>
+      <a class="card tint-amber" href="#segments" style="text-decoration:none;color:inherit"><h4>4 · Segments</h4><p>Does the page work for every type of shopper who lands on it?</p></a>
+      <a class="card" href="#mobile" style="text-decoration:none;color:inherit"><h4>5 · Mobile first</h4><p>Was the page designed for the smallest screen, then built up?</p></a>
+    </div>
+    <div class="keyidea">Design is a conversion lever, not decoration. Every choice on a page (a headline, a button, a photo) is something you can test and measure.</div>
+  </div>
+</section>
+
+<!-- USABILITY -->
+<section id="usability">
+  <div class="wrap">
+    <div class="kicker">Framework 1</div>
+    <h2>Design for usability</h2>
+    <p>People don't read web pages; they scan them. A usable site lets visitors find what they want without stopping to figure out how the site works. Six principles:</p>
+    <div class="grid g3">
+      <div class="card"><h4>Follow conventions</h4><p>Logo top-left, search at the top, cart top-right. Don't make users learn a new layout.</p></div>
+      <div class="card"><h4>Clear visual hierarchy</h4><p>The most important thing is the biggest and most prominent. Related items are grouped together.</p></div>
+      <div class="card"><h4>Clearly defined areas</h4><p>Break the page into obvious zones: navigation, main offer, categories, footer.</p></div>
+      <div class="card"><h4>Obvious clickability</h4><p>Buttons look like buttons. Links look like links. Nobody should have to hover to find out.</p></div>
+      <div class="card"><h4>Eliminate distractions</h4><p>Remove anything that doesn't help the visitor (or the business) reach the goal.</p></div>
+      <div class="card"><h4>Format for scanning</h4><p>Short paragraphs, headings, bullets, and bold key phrases.</p></div>
+    </div>
+
+    <h3>Desktop vs. mobile: the same six rules</h3>
+    <p>The slides show a craft retailer's homepage (Michaels) on both screens. On mobile, the same principles apply with much less space, so the site has to <em>choose</em>:</p>
+    <div class="yesno">
+      <div class="yes"><h4>Desktop</h4><ul class="clean"><li>Logo top-left, search bar in the center, cart top-right</li><li>Large hero promotion</li><li>Full category navigation across the top</li><li>Category tiles below the hero</li></ul></div>
+      <div class="no" style="background:var(--accent-soft)"><h4>Mobile</h4><ul class="clean"><li>Category navigation collapses into a "hamburger" menu</li><li>The hero promotion shrinks</li><li>Store information moves up (mobile users are often nearby)</li><li>Some content is cut, not just resized</li></ul></div>
+    </div>
+
+    <div class="widget" id="uxWidget">
+      <h3>Try it: audit a real homepage</h3>
+      <p class="sub">Open any company's homepage on your phone. Check each principle it passes. You'll get a score and the next thing to fix.</p>
+      <div class="checks" id="uxChecks"></div>
+      <div class="result">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px"><span>Usability score</span><span class="big" id="uxScore">0 / 6</span></div>
+        <div class="meter"><div id="uxBar" style="width:0"></div></div>
+        <div id="uxMsg" style="font-size:.92rem"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CCD -->
+<section id="ccd">
+  <div class="wrap">
+    <div class="kicker">Framework 2</div>
+    <h2>Conversion-centered design</h2>
+    <p>Usability makes a page easy to use. Conversion-centered design (CCD) makes it <em>persuasive</em>. Every element on the page should push the visitor toward one action. Seven principles:</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Principle</th><th>The question it asks</th></tr></thead>
+        <tbody>
+          <tr><td><b>Attention</b></td><td>Is the visitor's eye drawn to the conversion goal, with few competing links?</td></tr>
+          <tr><td><b>Context</b></td><td>Does the page fit where the visitor came from (the ad, email or search)?</td></tr>
+          <tr><td><b>Clarity</b></td><td>Is the offer stated simply enough to understand in a few seconds?</td></tr>
+          <tr><td><b>Congruence</b></td><td>Does every element (copy, images, layout) support the same goal?</td></tr>
+          <tr><td><b>Credibility</b></td><td>Are there reasons to trust you: reviews, logos, guarantees, security badges?</td></tr>
+          <tr><td><b>Closing</b></td><td>Is there one clear call to action that's easy to complete?</td></tr>
+          <tr><td><b>Continuance</b></td><td>After converting, does the experience keep the relationship going (confirmation, next step)?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="case">
+      <div class="head"><span class="tag">Example</span><strong>Dropbox sign-up page, desktop and mobile</strong></div>
+      <div class="body">
+        <ul class="clean">
+          <li><b>Attention:</b> the sign-up form is the visual anchor of the page.</li>
+          <li><b>Clarity:</b> a short headline explains the product in a few words.</li>
+          <li><b>Closing:</b> one primary button. Nothing competes with it.</li>
+          <li><b>Mobile:</b> the same principles, tighter. Two buttons create a soft hierarchy (filled primary, outlined secondary).</li>
+        </ul>
+        <p style="margin:0"><b>Discuss:</b> does a second button on mobile help visitors, or does it leak attention away from the main goal?</p>
+      </div>
+    </div>
+
+    <div class="widget" id="arWidget">
+      <h3>Try it: attention ratio</h3>
+      <p class="sub">Attention ratio compares the number of things you <em>can</em> click on a page to the number of things you <em>want</em> people to click. A dedicated landing page aims for 1:1. A homepage will always be higher, but lower is better.</p>
+      <div class="ctrl"><label for="arLinks">Clickable links on page</label><input type="range" id="arLinks" min="1" max="80" value="24"><output id="oLinks"></output></div>
+      <div class="ctrl"><label for="arGoals">Conversion goals</label><input type="range" id="arGoals" min="1" max="4" value="1"><output id="oGoals"></output></div>
+      <div class="result">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px"><span>Attention ratio</span><span class="big" id="arOut">—</span></div>
+        <div class="meter"><div id="arBar"></div></div>
+        <div id="arMsg" style="font-size:.92rem"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THREE QUESTIONS -->
+<section id="three">
+  <div class="wrap">
+    <div class="kicker">Framework 3</div>
+    <h2>The three questions</h2>
+    <p>Within a few seconds of landing, a visitor should be able to answer three questions. If they can't answer all three on the first screen (above the fold), the page is failing.</p>
+    <div class="grid g3">
+      <div class="card tint-blue"><h4>1 · What are you offering?</h4><p>Usually the headline.</p></div>
+      <div class="card tint-teal"><h4>2 · Why should I pick you?</h4><p>Usually the subheadline: the benefit or difference.</p></div>
+      <div class="card tint-purple"><h4>3 · What do you want me to do next?</h4><p>The call-to-action button, ideally with risk removed.</p></div>
+    </div>
+    <div class="case">
+      <div class="head"><span class="tag">Example</span><strong>Doba (drop-shipping software)</strong></div>
+      <div class="body">
+        <p>Headline: <b>"Drop Shipping. Simplified."</b> answers question 1. The subhead explains why Doba is easier, answering question 2. The button offers a free 30-day trial with no credit card required, which answers question 3 <em>and</em> removes the risk of saying yes. On mobile, all three answers still fit on one screen.</p>
+      </div>
+    </div>
+
+    <div class="widget" id="tqWidget">
+      <h3>Try it: write a hero section</h3>
+      <p class="sub">Pick a business, or write your own. The checker looks for an offer, a reason to choose you, and a clear action. It's a rough check, so use your judgment too.</p>
+      <div class="opts" id="tqPresets">
+        <button type="button" data-p="weak">Weak example</button>
+        <button type="button" data-p="strong">Strong example</button>
+        <button type="button" data-p="clear">Start blank</button>
+      </div>
+      <div class="grid" style="gap:10px">
+        <div><label style="font-size:.85rem;font-weight:600" for="tqH">Headline (what are you offering?)</label><input type="text" id="tqH" maxlength="80"></div>
+        <div><label style="font-size:.85rem;font-weight:600" for="tqS">Subheadline (why pick you?)</label><input type="text" id="tqS" maxlength="140"></div>
+        <div><label style="font-size:.85rem;font-weight:600" for="tqC">Button text (what's next?)</label><input type="text" id="tqC" maxlength="40"></div>
+      </div>
+      <div class="preview"><div class="ph" id="pvH"></div><div class="ps" id="pvS"></div><span class="pc" id="pvC"></span></div>
+      <div class="verdict" id="tqVerdict"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEGMENTS -->
+<section id="segments">
+  <div class="wrap">
+    <div class="kicker">Framework 4</div>
+    <h2>Design for segments</h2>
+    <p>One page has to serve many kinds of shoppers at the same time. The conversion (or the next step toward it) should appeal to each of them. Segments can be defined on many dimensions:</p>
+    <div class="chips">
+      <span class="chip">Search vs. category navigation</span>
+      <span class="chip">Browse vs. directed shopping</span>
+      <span class="chip">Product category</span>
+      <span class="chip">New vs. returning customer</span>
+      <span class="chip">Online vs. in-store preference</span>
+      <span class="chip">Comparison vs. brand-loyal</span>
+    </div>
+
+    <div class="widget" id="segWidget">
+      <h3>Try it: who is each element for?</h3>
+      <p class="sub">This is a simplified electronics-retailer homepage, like the Best Buy example in the slides. Click each element to see which shopper segment it serves. Find all eight.</p>
+      <div class="mock" aria-label="Mock retailer homepage">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <div class="pg">
+          <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:8px">
+            <button class="hot" data-s="0">☰ Products menu</button>
+            <button class="hot" data-s="1">🔍 Search bar</button>
+            <button class="hot" data-s="2">👤 Account · Sign in</button>
+          </div>
+          <button class="hot" data-s="3">📍 Your store: Folsom · Open until 9 pm · Pick up today</button>
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px">
+            <button class="hot" data-s="4" style="min-height:70px">🔥 Deal of the Day: big hero promotion</button>
+            <button class="hot" data-s="5">🕘 Recently viewed items</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button class="hot" data-s="6">⚖️ "Compare" checkboxes on products</button>
+            <button class="hot" data-s="7">🏷️ Shop by brand: Apple, Samsung, Sony</button>
+          </div>
+        </div>
+      </div>
+      <div class="result"><div id="segOut" style="font-size:.95rem">Click an element above.</div><div style="font-size:.85rem;color:var(--muted);margin-top:6px">Found <b id="segFound">0</b> / 8</div></div>
+    </div>
+    <div class="keyidea">On the mobile version, Best Buy keeps almost every segment: a search bar for searchers, a hamburger menu for category navigators, an account icon for returning customers, the nearest store for in-store shoppers, and a featured promotion for browsers. Nothing was dropped. It was prioritized.</div>
+  </div>
+</section>
+
+<!-- MOBILE FIRST -->
+<section id="mobile">
+  <div class="wrap">
+    <div class="kicker">Framework 5</div>
+    <h2>Mobile first</h2>
+    <p>Design for the smallest screen first, then add features and content for larger screens. This is called <b>progressive enhancement</b>. The small screen forces you to decide what really matters. Going the other way (designing for desktop and shrinking it) usually produces a cluttered mobile page.</p>
+
+    <div class="widget" id="mfWidget">
+      <h3>Try it: progressive enhancement</h3>
+      <p class="sub">Switch screen sizes. The core content never changes. Larger screens only <em>add</em> things.</p>
+      <div class="opts" id="mfOpts">
+        <button type="button" data-w="phone" aria-pressed="true">Phone</button>
+        <button type="button" data-w="tab">Tablet</button>
+        <button type="button" data-w="desk">Desktop</button>
+      </div>
+      <div class="frame" id="mfFrame" style="max-width:260px">
+        <div class="layout">
+          <div class="item span" style="background:#1f5fd1">Hero image + price<small>Core: what it is, what it costs</small></div>
+          <div class="item span" style="background:#0b8f7c">Add to Cart<small>Core: the conversion goal</small></div>
+          <div class="item" style="background:#6d3fc0">Trust badges<small>Core: reasons to believe</small></div>
+          <div class="item" style="background:#a5670f">Customer reviews<small>Core</small></div>
+          <div class="item extra t" style="background:#c2410c">Technology details<small>Added on tablet</small></div>
+          <div class="item extra" style="background:#56627a">Comparison table<small>Added on desktop</small></div>
+        </div>
+      </div>
+      <p id="mfMsg" style="font-size:.92rem;margin:12px 0 0"></p>
+    </div>
+
+    <div class="case">
+      <div class="head"><span class="tag">Example</span><strong>Owlet (baby monitor), mobile homepage</strong></div>
+      <div class="body">
+        <p>Scroll the mobile page and you see a clear sequence: hero and price, then a product configurator with trust badges, then technology details, then reviews with a sticky Add to Cart button. The punch line is the desktop site: it's hardly different from the mobile site, because it was built mobile first.</p>
+      </div>
+    </div>
+    <div class="callout"><b class="lbl">What changed since the textbook</b> Mobile first is no longer just a design choice. Google now uses mobile-first indexing, meaning it crawls and ranks the mobile version of your site. If content is missing on mobile, Google may not see it at all.</div>
+  </div>
+</section>
+
+<!-- CRO -->
+<section id="cro">
+  <div class="wrap">
+    <div class="kicker">Testing</div>
+    <h2>Conversion rate optimization (CRO)</h2>
+    <p>Design frameworks give you good guesses. Testing tells you which guess is right. CRO means making continual improvements to a site through repeated A/B tests: show different versions to different visitors and measure which one converts better.</p>
+
+    <div class="case">
+      <div class="head"><span class="tag">Case</span><strong>Grip6: one homepage, three versions</strong></div>
+      <div class="body">
+        <div class="grid g3">
+          <div class="card"><span class="tag">Original</span><h4 style="margin-top:8px">Pop-up over the SHOP button</h4><p>A form offering 15% off in exchange for an email address covers the SHOP button.</p></div>
+          <div class="card"><span class="tag">Variant 1</span><h4 style="margin-top:8px">No pop-up</h4><p>Hypothesis: uncovering the SHOP button will raise the conversion rate. The trade-off: fewer emails collected.</p></div>
+          <div class="card"><span class="tag">Variant 2</span><h4 style="margin-top:8px">Pop-up moved</h4><p>The email offer is still shown, but in a different place, so the SHOP button stays visible.</p></div>
+        </div>
+        <p style="margin:14px 0 0">With three versions instead of two, this is an <b>A/B/n test</b>.</p>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div>
+        <h3>Setting up an A/B test</h3>
+        <ol class="steps">
+          <li>Create variants of the web page</li>
+          <li>Add targeting rules (who sees the test)</li>
+          <li>Link to analytics to monitor results</li>
+          <li>Set up objectives (what counts as a win)</li>
+          <li>Start the test</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Traffic weights</h3>
+        <p>You don't have to split traffic evenly. Grip6 sent 60% of visitors to the original, 7% to Variant 1 and 33% to Variant 2. A small weight limits the risk if a variant performs badly, but it also means that variant collects less data.</p>
+        <div style="display:flex;height:34px;border-radius:8px;overflow:hidden;margin:10px 0 6px;font-size:.75rem;font-weight:600;color:#fff">
+          <span style="flex:60;background:#1f5fd1;display:grid;place-items:center">Original 60%</span>
+          <span style="flex:7;background:#c2410c;display:grid;place-items:center">7%</span>
+          <span style="flex:33;background:#0b8f7c;display:grid;place-items:center">V2 33%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b class="lbl">What changed since the textbook</b> The slides use Google Optimize, which Google shut down in September 2023. The same five steps apply in today's testing tools, such as Optimizely, VWO, AB Tasty, or the experiment features built into many e-commerce and email platforms.</div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="wrap">
+    <div class="kicker">Reading results</div>
+    <h2>Which version won?</h2>
+    <p>The answer depends on which number you look at. Choose a metric and watch the "winner" change.</p>
+
+    <div class="widget" id="resWidget">
+      <h3>Grip6 A/B/n test results</h3>
+      <div class="opts" id="resOpts">
+        <button type="button" data-m="cr">Conversion rate</button>
+        <button type="button" data-m="rps">Revenue per session</button>
+        <button type="button" data-m="rev">Total revenue</button>
+        <button type="button" data-m="tvps" aria-pressed="true">Total value per session</button>
+      </div>
+      <div class="ctrl"><label for="emVal">Value of one email</label><input type="range" id="emVal" min="0" max="10" step="0.25" value="5"><output id="oEm"></output></div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th></th><th class="num">Original</th><th class="num">Variant 1</th><th class="num">Variant 2</th></tr></thead>
+          <tbody id="resBody"></tbody>
+        </table>
+      </div>
+      <p id="resMsg" style="font-size:.92rem;margin:12px 0 0"></p>
+      <p style="font-size:.82rem;color:var(--muted);margin:8px 0 0">Revenue = conversions × average order value (AOV). The slide's $5 per email reproduces its email values. Original revenue calculates to $81,600 (the slide shows $81,400, a typo; revenue per session is still $1.36).</p>
+    </div>
+    <div class="keyidea">Pick the metric that matches your business goal <em>before</em> the test starts. Variant 1 wins on conversion rate and revenue per session, but once email sign-ups are counted, Variant 2 delivers the most total value. And Variant 1 only got 7% of traffic, so ask whether you have enough data before you declare a winner.</div>
+
+    <div class="widget" id="sigWidget">
+      <h3>Try it: is the difference real?</h3>
+      <p class="sub">A small difference on a small sample could be luck. This checks whether the difference in conversion rate between two versions is statistically significant (a two-proportion z-test). Defaults are Grip6's Original vs. Variant 1.</p>
+      <div class="grid g2">
+        <div><b>Version A</b>
+          <label style="display:block;font-size:.85rem;margin-top:6px" for="sA">Sessions</label><input type="number" id="sA" value="60000" min="1">
+          <label style="display:block;font-size:.85rem;margin-top:6px" for="cA">Conversions</label><input type="number" id="cA" value="2400" min="0"></div>
+        <div><b>Version B</b>
+          <label style="display:block;font-size:.85rem;margin-top:6px" for="sB">Sessions</label><input type="number" id="sB" value="7000" min="1">
+          <label style="display:block;font-size:.85rem;margin-top:6px" for="cB">Conversions</label><input type="number" id="cB" value="350" min="0"></div>
+      </div>
+      <div class="opts" style="margin-top:12px">
+        <button type="button" class="ghost" id="sigSmall">Try a small sample (600 vs. 70)</button>
+        <button type="button" class="ghost" id="sigReset">Reset to Grip6</button>
+      </div>
+      <div class="result"><div id="sigOut" style="font-size:.95rem"></div></div>
+    </div>
+
+    <h3>Multivariate tests</h3>
+    <p>An A/B/n test changes one thing at a time. A <b>multivariate test</b> tests combinations. For Grip6, that might be three pop-up options (none, bottom-left, moved) × two main images = six versions. You learn how elements interact, but each combination needs enough traffic of its own.</p>
+    <div class="widget" id="mvWidget">
+      <h3>Try it: how much traffic does a multivariate test need?</h3>
+      <div class="ctrl"><label for="mv1">Pop-up versions</label><input type="range" id="mv1" min="1" max="4" value="3"><output id="o1"></output></div>
+      <div class="ctrl"><label for="mv2">Main image versions</label><input type="range" id="mv2" min="1" max="4" value="2"><output id="o2"></output></div>
+      <div class="ctrl"><label for="mv3">Headline versions</label><input type="range" id="mv3" min="1" max="4" value="1"><output id="o3"></output></div>
+      <div class="ctrl"><label for="mvN">Sessions per version</label><input type="range" id="mvN" min="1000" max="20000" step="1000" value="5000"><output id="oN"></output></div>
+      <div class="result">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px"><span>Combinations to test</span><span class="big" id="mvC">—</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px"><span>Total sessions needed</span><span class="big" id="mvT">—</span></div>
+        <div id="mvMsg" style="font-size:.92rem;margin-top:6px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ELEMENTS -->
+<section id="elements">
+  <div class="wrap">
+    <div class="kicker">Objective 2</div>
+    <h2>Web page elements to decide on</h2>
+    <p>Every page is a set of decisions. Each element below is a variable you can test.</p>
+    <div class="grid g4">
+      <div class="card"><h4>🎨 Color scheme</h4><p>Matches the brand, and makes the call to action stand out by contrast.</p></div>
+      <div class="card"><h4>🔘 Buttons</h4><p>Copy, size, color, and position. The wording often matters more than the color.</p></div>
+      <div class="card"><h4>🖼️ Images</h4><p>Show the product in use, or people who look like your customers.</p></div>
+      <div class="card"><h4>🧭 Navigation</h4><p>Fewer, clearer menu choices. Landing pages often remove navigation entirely.</p></div>
+      <div class="card"><h4>🛡️ Trust symbols</h4><p>Reviews, awards, press logos, security badges, guarantees.</p></div>
+      <div class="card"><h4>▶️ Video</h4><p>Great for demonstrations, but it slows the page and many viewers watch muted.</p></div>
+      <div class="card"><h4>📝 Forms</h4><p>Every extra field lowers completion. Ask only for what you need.</p></div>
+      <div class="card"><h4>📞 Phone numbers</h4><p>Builds trust and serves people who would rather call, especially for high-priced services.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LANDING PAGES -->
+<section id="landing">
+  <div class="wrap">
+    <div class="kicker">Objectives 3 and 4</div>
+    <h2>Landing pages</h2>
+    <p>A landing page is the page someone arrives on after clicking an ad. The type of page should match what the person was thinking when they clicked.</p>
+    <div class="grid g3">
+      <div class="card"><h4>Single product</h4><p>One product with photos, price and an Add to Cart button. Fits an ad for a specific item.</p></div>
+      <div class="card"><h4>Multi product</h4><p>A category or collection. Fits an ad about a product line or a sale.</p></div>
+      <div class="card"><h4>Lead generation</h4><p>A form to capture contact details. Fits B2B, services, and high-priced purchases.</p></div>
+      <div class="card"><h4>Subscription</h4><p>Sign up for a recurring service, newsletter or free trial.</p></div>
+      <div class="card"><h4>Long copy</h4><p>A long, detailed page that answers every objection. Fits complex or expensive decisions.</p></div>
+      <div class="card"><h4>Single purpose</h4><p>One action only (download, register, RSVP), with no navigation to distract.</p></div>
+    </div>
+    <h3>Ad-to-landing-page match</h3>
+    <p>When the landing page doesn't deliver what the ad promised, the visitor feels lost and leaves. You paid for the click and wasted it. Check the match on these dimensions:</p>
+    <div class="grid g4">
+      <div class="card tint-blue"><h4>Headline and message</h4><p>The page repeats the ad's main promise.</p></div>
+      <div class="card tint-teal"><h4>Offer</h4><p>Any price, discount or perk in the ad appears on the page.</p></div>
+      <div class="card tint-purple"><h4>Look and feel</h4><p>Same imagery, colors and product.</p></div>
+      <div class="card tint-amber"><h4>Call to action</h4><p>The action the ad suggested is available right away.</p></div>
+    </div>
+    <div class="keyidea">Message match is where most campaigns leak. A great ad sending people to a generic homepage is money spent on traffic that doesn't convert.</div>
+  </div>
+</section>
+
+<!-- MATCH EXERCISE -->
+<section id="match">
+  <div class="wrap">
+    <div class="kicker">Practice</div>
+    <h2>Five ads, five landing pages</h2>
+    <p>For each ad, decide which type of landing page it should go to and whether the real landing page matched. Commit to your answer, then reveal.</p>
+    <div id="matchBox"></div>
+  </div>
+</section>
+
+<!-- ACTIVITIES -->
+<section id="activities">
+  <div class="wrap">
+    <div class="kicker">Lecture activities</div>
+    <h2>CRO: the four high-impact areas</h2>
+    <p>When you're deciding what to test first, start with the areas most likely to move conversions.</p>
+    <div class="grid g4">
+      <div class="card tint-red" style="background:var(--red-soft);border-color:transparent;box-shadow:none"><h4>a · Friction</h4><ul class="clean"><li>Make the page load fast (test it at <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener">PageSpeed Insights</a>)</li><li>Reduce clutter with <b>existence testing</b>: remove an element and see whether results change</li></ul></div>
+      <div class="card tint-blue"><h4>b · Value proposition</h4><ul class="clean"><li>List every possible value proposition</li><li>Test them systematically, not just one</li></ul></div>
+      <div class="card tint-teal"><h4>c · Call to action</h4><ul class="clean"><li>CTA copy</li><li>Button position</li><li>Color and size</li></ul></div>
+      <div class="card tint-purple"><h4>d · Trust</h4><ul class="clean"><li>Awards, press, customer reviews</li><li>Where trust symbols sit (near the CTA beats the footer)</li></ul></div>
+    </div>
+    <div class="callout"><b class="lbl">What changed since the textbook</b> PageSpeed Insights now reports Google's <b>Core Web Vitals</b>: how fast the main content appears (LCP), how quickly the page responds to a tap (INP, which replaced FID in March 2024), and how much the layout jumps around (CLS). These measure friction the way real visitors feel it.</div>
+
+    <h3>Guess the winner</h3>
+    <p>These are real A/B tests from a golf apparel store's mobile site. For each one, guess which version won before you reveal the answer.</p>
+    <div id="abBox"></div>
+
+    <h3>Website maintenance: fix this homepage</h3>
+    <div class="case">
+      <div class="head"><span class="tag">Case</span><strong>A lamp retailer with a very low conversion rate</strong></div>
+      <div class="body">
+        <p>The homepage has a dark photo of stained-glass lamps with a small "Shop Now" button, a "Free shipping on all orders" strip, and a grid of category tiles (table lamps, floor lamps, ceiling lamps, novelty lamps), each with its own identical "Shop Now" button. What would you change? Check the fixes you'd propose, then compare with the list.</p>
+        <div class="checks" id="fixChecks"></div>
+        <div style="margin-top:12px"><button class="btn" type="button" id="fixReveal">Compare with the instructor's list</button></div>
+        <div id="fixOut" class="result" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <div class="wrap">
+    <div class="kicker">Check yourself</div>
+    <h2>Chapter 2 quiz</h2>
+    <p>Ten questions. Pick an answer to see the explanation.</p>
+    <div id="quizBox"></div>
+    <div class="score"><span>Score: <b id="qScore">0</b> / <span id="qTotal">0</span> · answered <span id="qDone">0</span></span><button class="ghost" id="qReset" type="button">Start over</button></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Digital Marketing Essentials · Chapter 2: Web Design (Desktop and Mobile). Learning page for Jessup University students, based on the Stukent chapter lecture.</p>
+    <p>Interactive models on this page are simplified illustrations for learning. Grip6 and golf apparel test figures are from the chapter slides.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function $(id){return document.getElementById(id);}
+  // theme
+  var root=document.documentElement, btn=$('themeBtn');
+  try{var saved=localStorage.getItem('dm-theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme');
+    if(!cur){cur=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('dm-theme',next);}catch(e){}
+  });
+
+  // pill groups helper
+  function pills(el,cb){
+    el.querySelectorAll('button').forEach(function(x){ if(!x.hasAttribute('aria-pressed')) x.setAttribute('aria-pressed','false'); });
+    el.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b) return;
+      el.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true'); cb(b);
+    });
+  }
+
+  // usability audit
+  var UX=[
+    ['Follows conventions','Logo top-left, search at top, cart or account top-right.','Move key items to where people expect them. Unusual layouts make visitors stop and think.'],
+    ['Clear visual hierarchy','You can tell the single most important thing in one glance.','Make one thing clearly the biggest and boldest. Right now everything competes.'],
+    ['Clearly defined areas','Navigation, main offer, and content zones are visually separate.','Use spacing and background color to separate the page into obvious zones.'],
+    ['Obvious clickability','Buttons look like buttons; links look like links.','Give buttons a solid shape and contrasting color. Don\'t make people guess what\'s clickable.'],
+    ['No distractions','No auto-play video, pop-ups covering content, or clutter.','Remove or delay anything that pulls attention away from the main goal.'],
+    ['Formatted for scanning','Short paragraphs, headings, bullets, bold key phrases.','Break long text into headings and bullets. Visitors scan; they don\'t read.']
+  ];
+  $('uxChecks').innerHTML=UX.map(function(u,i){return '<label><input type="checkbox" id="ux'+i+'"><span><b>'+u[0]+'</b><small>'+u[1]+'</small></span></label>';}).join('');
+  function ux(){
+    var n=0, miss=null;
+    UX.forEach(function(u,i){ if($('ux'+i).checked) n++; else if(miss===null) miss=i; });
+    $('uxScore').textContent=n+' / 6'; $('uxBar').style.width=(n/6*100)+'%';
+    var m;
+    if(n===6) m='<b>Excellent.</b> This page passes all six. Next step: run it through the conversion-centered design principles below.';
+    else if(n>=4) m='<b>Solid, with gaps.</b> Fix first: <b>'+UX[miss][0]+'</b>. '+UX[miss][2];
+    else if(n>=1) m='<b>Needs work.</b> Start with <b>'+UX[miss][0]+'</b>. '+UX[miss][2];
+    else m='Check the principles the page passes.';
+    $('uxMsg').innerHTML=m;
+  }
+  UX.forEach(function(u,i){$('ux'+i).addEventListener('change',ux);}); ux();
+
+  // attention ratio
+  function ar(){
+    var l=+$('arLinks').value, g=+$('arGoals').value; if(g>l){g=l;$('arGoals').value=g;}
+    $('oLinks').textContent=l; $('oGoals').textContent=g;
+    var r=l/g; $('arOut').textContent=(Math.round(r*10)/10)+' : 1';
+    $('arBar').style.width=Math.max(4,100-Math.min(96,(r-1)*2.5))+'%';
+    var m;
+    if(r<=1.5) m='<b>Focused.</b> This is what a dedicated landing page should look like: nearly every click leads to conversion.';
+    else if(r<=6) m='<b>Fairly focused.</b> A few extra links. Ask whether each one helps the visitor convert or just gives them a way out.';
+    else if(r<=20) m='<b>Typical homepage.</b> Fine for a homepage, but too distracting for a page that paid traffic lands on.';
+    else m='<b>Scattered.</b> Visitors have dozens of ways to leave without converting. Don\'t send ad clicks here.';
+    if(g>1) m+=' Multiple goals also split attention; consider one primary and one secondary goal at most.';
+    $('arMsg').innerHTML=m;
+  }
+  ['arLinks','arGoals'].forEach(function(id){$(id).addEventListener('input',ar);}); ar();
+
+  // three questions
+  var PRE={
+    weak:['Welcome to BrightPath','We are passionate about excellence and innovation.','Learn more'],
+    strong:['Math tutoring for grades 6–12','Certified teachers, live 1-on-1 sessions, and a grade-improvement guarantee.','Book a free first session'],
+    clear:['','','']
+  };
+  function setPre(k){ $('tqH').value=PRE[k][0]; $('tqS').value=PRE[k][1]; $('tqC').value=PRE[k][2]; tq(); }
+  function tq(){
+    var h=$('tqH').value.trim(), s=$('tqS').value.trim(), c=$('tqC').value.trim();
+    $('pvH').textContent=h||'Your headline'; $('pvS').textContent=s||'Your subheadline'; $('pvC').textContent=c||'Button';
+    var vague=/^(welcome|hello|hi|home)\b|passionate|excellence|innovati|solutions|world.class|best in class|we are|we're/i;
+    var benefit=/\d|free|guarantee|fast|easy|simple|save|no credit|certified|trusted|rated|only|minutes|day|hours|risk|money.back|review|award/i;
+    var weakCta=/^(learn more|click here|submit|more|go|enter|continue)$/i;
+    var verbs=/^(get|start|book|try|shop|buy|join|claim|download|schedule|request|see|find|order|sign|create|reserve|subscribe|call)/i;
+    var r=[];
+    if(!h) r.push([0,'<b>What are you offering?</b> No headline yet.']);
+    else if(vague.test(h)||h.split(/\s+/).length<2) r.push([0,'<b>What are you offering?</b> The headline doesn\'t say what you sell. A visitor should know the product or service in one read.']);
+    else r.push([1,'<b>What are you offering?</b> The headline names the offer.']);
+    if(!s) r.push([0,'<b>Why pick you?</b> No subheadline yet.']);
+    else if(vague.test(s)&&!benefit.test(s)) r.push([0,'<b>Why pick you?</b> Every company says this. Give a specific benefit, number, or guarantee a competitor can\'t claim.']);
+    else if(!benefit.test(s)) r.push([0,'<b>Why pick you?</b> Make it more concrete: add a number, a guarantee, or a specific benefit.']);
+    else r.push([1,'<b>Why pick you?</b> There\'s a specific reason to choose you.']);
+    if(!c) r.push([0,'<b>What next?</b> No button text yet.']);
+    else if(weakCta.test(c)) r.push([0,'<b>What next?</b> "'+c+'" is vague. Say what the visitor gets, such as "Start my free trial."']);
+    else if(!verbs.test(c)) r.push([0,'<b>What next?</b> Start the button with an action verb (Get, Start, Book, Shop…).']);
+    else r.push([1,'<b>What next?</b> A clear action'+( /free|no credit|risk/i.test(c+s)?', and the risk of saying yes is reduced.':'. Consider removing risk ("free," "no credit card").')]);
+    $('tqVerdict').innerHTML=r.map(function(x){return '<div><span class="'+(x[0]?'ok':'bad')+'">'+(x[0]?'✓':'✗')+'</span><span>'+x[1]+'</span></div>';}).join('');
+  }
+  pills($('tqPresets'),function(b){setPre(b.dataset.p);});
+  ['tqH','tqS','tqC'].forEach(function(id){$(id).addEventListener('input',tq);});
+  $('tqPresets').querySelector('[data-p=weak]').setAttribute('aria-pressed','true'); setPre('weak');
+
+  // segments
+  var SEG=[
+    ['Category navigators','People who browse by department (TVs, laptops, appliances) rather than typing a search.'],
+    ['Searchers / directed shoppers','People who already know what they want. They type "65-inch OLED TV" and want to go straight to it.'],
+    ['New vs. returning customers','Returning customers sign in to see orders and rewards. New visitors can create an account.'],
+    ['In-store shoppers','People who prefer to buy in person or pick up today. Store hours and pickup options serve them.'],
+    ['Browsers','People without a specific goal. A big promotion gives them a reason to start shopping.'],
+    ['Returning customers (browsing history)','Showing recently viewed items lets returning visitors pick up where they left off.'],
+    ['Comparison shoppers','People weighing several models side by side before deciding.'],
+    ['Brand-loyal shoppers','People who already know they want a certain brand and want to see only that brand\'s products.']
+  ];
+  var found={};
+  document.querySelectorAll('#segWidget .hot').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#segWidget .hot').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on','found'); var s=SEG[+b.dataset.s]; found[b.dataset.s]=1;
+      var n=Object.keys(found).length; $('segFound').textContent=n;
+      $('segOut').innerHTML='<b>'+s[0]+'.</b> '+s[1]+(n===8?' <br><br><b>All eight found.</b> One homepage, at least eight different shoppers.':'');
+    });
+  });
+
+  // mobile first
+  var MF={phone:['260px','<b>Phone:</b> only the core. Hero, price, Add to Cart, trust and reviews. If something isn\'t here, ask whether anyone needs it.'],
+          tab:['520px','<b>Tablet:</b> the same core, laid out in two columns, plus technology details for people with more screen and more time.'],
+          desk:['100%','<b>Desktop:</b> everything from mobile, plus a comparison table. Notice nothing from the phone version was removed; desktop only adds.']};
+  function mf(w){ var f=$('mfFrame'); f.className='frame'+(w==='phone'?'':' w-'+w); f.style.maxWidth=MF[w][0]; $('mfMsg').innerHTML=MF[w][1]; }
+  pills($('mfOpts'),function(b){mf(b.dataset.w);}); mf('phone');
+
+  // results
+  var V=[{n:'Original',s:60000,c:2400,aov:34,e:12000},{n:'Variant 1',s:7000,c:350,aov:40,e:500},{n:'Variant 2',s:33000,c:1485,aov:34,e:6000}];
+  var metric='tvps';
+  function money(x,d){return '$'+x.toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});}
+  function res(){
+    var ev=+$('emVal').value; $('oEm').textContent=money(ev,2);
+    V.forEach(function(v){ v.cr=v.c/v.s; v.rev=v.c*v.aov; v.rps=v.rev/v.s; v.ev=v.e*ev; v.vps=v.ev/v.s; v.tvps=v.rps+v.vps; });
+    var rows=[
+      ['Sessions','s',function(x){return x.toLocaleString();}],
+      ['Conversions','c',function(x){return x.toLocaleString();}],
+      ['Conversion rate','cr',function(x){return (x*100).toFixed(1)+'%';}],
+      ['AOV','aov',function(x){return money(x,0);}],
+      ['Revenue','rev',function(x){return money(x,0);}],
+      ['Revenue per session','rps',function(x){return money(x,2);}],
+      ['Emails collected','e',function(x){return x.toLocaleString();}],
+      ['Email value','ev',function(x){return money(x,0);}],
+      ['Email value per session','vps',function(x){return money(x,2);}],
+      ['Total value per session','tvps',function(x){return money(x,2);}]
+    ];
+    var best=V.reduce(function(a,b){return Math.round(b[metric]*1000)>Math.round(a[metric]*1000)?b:a;});
+    $('resBody').innerHTML=rows.map(function(r){
+      var hl=r[1]===metric;
+      return '<tr'+(hl?' class="hl"':'')+'><td><b>'+r[0]+'</b></td>'+V.map(function(v){var w=hl&&v===best;return '<td class="num'+(w?' win':'')+'">'+r[2](v[r[1]])+(w?' ✓':'')+'</td>';}).join('')+'</tr>';
+    }).join('');
+    var msg={
+      cr:'Variant 1 converts best (5.0%). Removing the pop-up uncovered the SHOP button. But conversion rate ignores order size and email sign-ups.',
+      rps:'Variant 1 also wins on revenue per session ($2.00), helped by a higher average order. This is the metric a pure e-commerce team might choose.',
+      rev:'The Original "wins" total revenue only because it got 60% of the traffic. Totals are misleading when traffic is split unevenly; compare per-session numbers instead.',
+      tvps:''
+    }[metric];
+    if(metric==='tvps'){
+      msg='<b>'+best.n+' wins at '+money(ev,2)+' per email.</b> ';
+      if(best.n==='Variant 2') msg+='Keeping the email offer, but moving it off the SHOP button, captures most of both: sales and sign-ups.';
+      else if(best.n==='Variant 1') msg+='When emails are worth little, giving up email capture for more sales pays off. Drag the slider up: above about $4.26 per email, Variant 2 takes the lead.';
+      else msg+='When emails are very valuable, the version that collects the most emails per session wins.';
+    }
+    $('resMsg').innerHTML=msg;
+  }
+  pills($('resOpts'),function(b){metric=b.dataset.m;res();});
+  $('emVal').addEventListener('input',res); res();
+
+  // significance
+  function erf(x){var s=x<0?-1:1;x=Math.abs(x);var t=1/(1+0.3275911*x);var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return s*y;}
+  function sig(){
+    var sa=+$('sA').value, ca=+$('cA').value, sb=+$('sB').value, cb=+$('cB').value;
+    if(sa<=0||sb<=0||ca>sa||cb>sb||ca<0||cb<0){$('sigOut').innerHTML='Check the numbers: conversions can\'t exceed sessions.';return;}
+    var pa=ca/sa, pb=cb/sb, p=(ca+cb)/(sa+sb), se=Math.sqrt(p*(1-p)*(1/sa+1/sb));
+    var z=se?(pb-pa)/se:0, pval=2*(1-0.5*(1+erf(Math.abs(z)/Math.SQRT2)));
+    var lift=pa?((pb-pa)/pa*100):0;
+    var out='A: <b>'+(pa*100).toFixed(2)+'%</b> · B: <b>'+(pb*100).toFixed(2)+'%</b> · relative lift: <b>'+(lift>=0?'+':'')+lift.toFixed(1)+'%</b><br>';
+    out+='z = '+z.toFixed(2)+', p = '+(pval<0.0001?'< 0.0001':pval.toFixed(4))+'<br>';
+    if(pval<0.05) out+='<span class="pill up">Significant at 95%</span> A difference this large is unlikely to be luck.';
+    else out+='<span class="pill down">Not significant</span> This difference could easily be random. Keep the test running before you decide.';
+    $('sigOut').innerHTML=out;
+  }
+  ['sA','cA','sB','cB'].forEach(function(id){$(id).addEventListener('input',sig);});
+  $('sigSmall').addEventListener('click',function(){$('sA').value=600;$('cA').value=24;$('sB').value=70;$('cB').value=4;sig();});
+  $('sigReset').addEventListener('click',function(){$('sA').value=60000;$('cA').value=2400;$('sB').value=7000;$('cB').value=350;sig();});
+  sig();
+
+  // multivariate
+  function mv(){
+    var a=+$('mv1').value,b=+$('mv2').value,c=+$('mv3').value,n=+$('mvN').value;
+    $('o1').textContent=a;$('o2').textContent=b;$('o3').textContent=c;$('oN').textContent=(n/1000)+'k';
+    var k=a*b*c, t=k*n; $('mvC').textContent=k; $('mvT').textContent=t.toLocaleString();
+    var m;
+    if(k<=2) m='That\'s just an A/B test. Add another element to make it multivariate.';
+    else if(t<=100000) m='Manageable. A site with Grip6\'s traffic (100,000 sessions in the test) could run this.';
+    else if(t<=300000) m='Getting expensive. You\'ll need a lot of traffic, or a long test.';
+    else m='<b>Too many combinations</b> for most sites. Each new element multiplies the traffic you need. Test fewer elements, or run sequential A/B tests instead.';
+    $('mvMsg').innerHTML=m;
+  }
+  ['mv1','mv2','mv3','mvN'].forEach(function(id){$(id).addEventListener('input',mv);}); mv();
+
+  // landing page match
+  var TYPES=['Single product','Multi product','Lead generation','Subscription','Long copy','Single purpose'];
+  var ADS=[
+    {b:'prAna',ad:'Two photos of men\'s jeans, each with a "View" button. No other message.',type:'Single product',match:'good',
+     ans:'prAna sent clicks to the existing product page for that jean. Because the ad had no special message or offer, there was nothing extra to match, so a regular product page worked and saved the cost of designing a new page.'},
+    {b:'Hilton',ad:'"You\'ll get more at Hilton.com": price match guarantee, free breakfast, choose your room, free WiFi. "Book now" button.',type:'Single purpose',match:'poor',
+     ans:'The page led with a summer sale package. A middle image matched part of the ad, but the four promised perks weren\'t near the booking window. A better page would repeat "price match, free breakfast, choose your room, free WiFi" right beside the booking form.'},
+    {b:'Transamerica',ad:'"Are you asking the right questions? Extend your value with Wealth + Health."',type:'Long copy',match:'good',
+     ans:'A strong match. "Build trust by asking the right questions" sits in the top stripe, and "Why Wealth + Health" appears above the fold with a video. More content follows as you scroll, with calls to action along the way: a classic long-copy page for a complex financial decision.'},
+    {b:'Jane',ad:'Photos of a wooden outdoor bench and a quilted vest.',type:'Single product',match:'good',
+     ans:'Jane sent clicks to the bench\'s product page. Either it assumes a click means interest in that product, or it thinks a product page is an easy place to start browsing (it shows "similar products" below). Both are defensible. Which would you choose, given the ad showed two products?'},
+    {b:'Crunchmaster',ad:'"Simply better crackers," a gluten-free multi-seed cracker box, and a "Find near you" button.',type:'Single purpose',typeAlt:'Single product',match:'poor',
+     ans:'The page opens with a brand story video ("We believe in healthy living") and no immediate call to action. The ad promised "Find near you," so the page should open with a store locator, or a way to buy online. The traffic was paid for and the intent was wasted.'}
+  ];
+  $('matchBox').innerHTML=ADS.map(function(a,i){
+    return '<div class="q" data-i="'+i+'"><p class="stem">Ad '+(i+1)+' · '+a.b+'</p><p style="margin-top:-4px">'+a.ad+'</p>'+
+      '<div class="grid g2" style="gap:10px"><div><label style="font-size:.85rem;font-weight:600" for="mt'+i+'">Best landing page type</label><select id="mt'+i+'"><option value="">Choose…</option>'+TYPES.map(function(t){return '<option>'+t+'</option>';}).join('')+'</select></div>'+
+      '<div><label style="font-size:.85rem;font-weight:600" for="mm'+i+'">Your headline for the landing page</label><input type="text" id="mm'+i+'" placeholder="Write it before you reveal"></div></div>'+
+      '<div class="opts" style="margin:12px 0 0"><button type="button" class="ghost" data-r="'+i+'">Reveal what they did</button></div>'+
+      '<div class="exp" id="mx'+i+'"></div></div>';
+  }).join('');
+  $('matchBox').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-r]'); if(!b) return;
+    var i=+b.dataset.r, a=ADS[i], box=b.closest('.q'), pick=$('mt'+i).value;
+    var ok=pick===a.type||pick===a.typeAlt;
+    var head=pick?(ok?'<span class="pill up">Good call</span> ':'<span class="pill down">Compare</span> '):'';
+    $('mx'+i).innerHTML=head+'<b>Suggested type: '+a.type+(a.typeAlt?' or '+a.typeAlt:'')+'.</b> Real page match: <b>'+(a.match==='good'?'strong':'weak')+'</b>. '+a.ans;
+    box.classList.add('done');
+  });
+
+  // guess the winner
+  function ph(inner){return '<div class="phone"><div class="ship">FREE U.S. shipping over $55</div>'+inner+'</div>';}
+  var AB=[
+    {t:'Test 1 · Product grid layout',
+     o:ph('<div class="img" style="height:80px">polo photo</div><div class="t">The Patriot Golf Polo</div><div class="pr">★★★★★ $39.95</div><div class="b">Shop Now</div><div class="img" style="height:80px;margin-top:6px">polo photo</div>'),
+     v:ph('<div class="g2x"><div><div class="img" style="height:44px">polo</div><div class="t">US Polo</div><div class="pr">$49.95</div><div class="b">Shop Now</div></div><div><div class="img" style="height:44px">polo</div><div class="t">Patriot Polo</div><div class="pr">$39.95</div><div class="b">Shop Now</div></div><div><div class="img" style="height:44px">polo</div><div class="t">Women\'s US</div><div class="pr">$49.95</div></div><div><div class="img" style="height:44px">polo</div><div class="t">Women\'s Patriot</div><div class="pr">$39.95</div></div></div>'),
+     diff:'One large product per row vs. a two-across grid.',win:'v',res:[['up','Conversion rate +28%'],['up','Revenue per visitor +$0.37']],
+     why:'The grid shows four products per screen instead of one, so shoppers see more options with less scrolling.'},
+    {t:'Test 2 · Adding a second checkout button',
+     o:ph('<div class="img" style="height:70px">polo photo</div><div class="t">Just Beachy Golf Polo</div><div class="pr">★★★★★ (820) $31.95</div><div class="sw"><span>S</span><span>M</span><span>L</span><span>XL</span><span>XXL</span></div><div class="b out">ADD TO CART</div>'),
+     v:ph('<div class="img" style="height:70px">polo photo</div><div class="t">Just Beachy Golf Polo</div><div class="pr">★★★★★ (820) $39.95</div><div class="sw"><span>S</span><span>M</span><span>L</span><span>XL</span><span>XXL</span></div><div class="b out">ADD TO CART</div><div class="b prime">Buy with Prime · Add to cart</div><div class="pr" style="font-size:.56rem">FREE delivery as soon as Sun</div>'),
+     diff:'The variant adds a "Buy with Prime" button and delivery promise below Add to Cart. (Look closely at the price, too.)',win:'o',res:[['down','Variant conversion rate −41%'],['down','Variant revenue per visitor −$1.74']],
+     why:'The extra button split attention and pushed the main CTA into competition with a second option. More choices isn\'t always better. Also note the variant shows a higher price ($39.95 vs. $31.95), so this test changed more than one thing. That makes it hard to know which change caused the drop.'},
+    {t:'Test 3 · Color swatch order',
+     o:ph('<div class="img" style="height:70px">golf tees photo</div><div class="t">Telos Premium Golf Tees</div><div class="pr">★★★★★ (506) $9.64</div><div class="sw"><span>ICE BLUE</span><span>FIRE RED</span><span>NAVY BLUE</span><span>LUCKY GREEN</span><span>SUNNY YELLOW</span><span>CLASSIC WHITE</span><span>HOT PINK</span></div>'),
+     v:ph('<div class="img" style="height:70px">golf tees photo</div><div class="t">Telos Premium Golf Tees</div><div class="pr">★★★★★ (506) $9.64</div><div class="sw"><span>ICE BLUE</span><span>SUNNY YELLOW</span><span>FIRE RED</span><span>CLASSIC WHITE</span><span>NAVY BLUE</span><span>HOT PINK</span><span>LUCKY GREEN</span></div>'),
+     diff:'Same page, same colors. Only the order and layout of the color swatches changed.',win:'v',res:[['up','Conversion rate +19%'],['up','Revenue per visitor +$0.20']],
+     why:'A tiny change made a real difference. Nobody could have predicted this one by looking at it. That\'s why you test instead of guessing.'}
+  ];
+  $('abBox').innerHTML=AB.map(function(a,i){
+    return '<div class="q" data-i="'+i+'"><p class="stem">'+a.t+'</p><p style="font-size:.9rem;color:var(--muted);margin-top:-6px">'+a.diff+'</p>'+
+      '<div class="ab"><div class="side"><b>Original</b>'+a.o+'</div><div class="side"><b>Variant</b>'+a.v+'</div></div>'+
+      '<div class="guess"><button type="button" class="btn" data-g="o">Original wins</button><button type="button" class="btn" data-g="v">Variant wins</button></div>'+
+      '<div class="reveal"></div></div>';
+  }).join('');
+  $('abBox').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-g]'); if(!b) return;
+    var box=b.closest('.q'); if(box.classList.contains('done')) return;
+    var a=AB[+box.dataset.i], right=b.dataset.g===a.win;
+    box.querySelectorAll('button[data-g]').forEach(function(x){x.disabled=true;x.style.opacity=x===b?1:.45;});
+    box.querySelector('.reveal').innerHTML='<p style="margin:0 0 6px"><b>'+(right?'Correct!':'Not this time.')+'</b> The <b>'+(a.win==='o'?'original':'variant')+'</b> won.</p><p style="margin:0 0 8px">'+a.res.map(function(r){return '<span class="pill '+r[0]+'">'+r[1]+'</span>';}).join(' ')+'</p><p style="margin:0;font-size:.92rem;color:var(--muted)">'+a.why+'</p>';
+    box.classList.add('done');
+  });
+
+  // website maintenance
+  var FIX=[
+    ['Write a headline that says what the store sells and why it\'s special','value proposition',1],
+    ['Add trust symbols: reviews, ratings, press or a guarantee','trust',1],
+    ['Make one primary call to action stand out instead of many identical "Shop Now" buttons','call to action',1],
+    ['Brighten the hero image so the product is easy to see','friction',1],
+    ['Make the category structure clearer (what\'s the difference between "novelty lamps" and the rest?)','friction',1],
+    ['Say who the lamps are for (collectors? gift buyers? home decorators?)','value proposition',1],
+    ['Add an auto-playing background video','',0],
+    ['Add more menu items to the navigation','',0]
+  ];
+  $('fixChecks').innerHTML=FIX.map(function(f,i){return '<label><input type="checkbox" id="fx'+i+'"><span>'+f[0]+'</span></label>';}).join('');
+  $('fixReveal').addEventListener('click',function(){
+    var hits=0,miss=[],bad=[];
+    FIX.forEach(function(f,i){var c=$('fx'+i).checked; if(f[2]&&c) hits++; else if(f[2]) miss.push(f); else if(c) bad.push(f);});
+    var out='<p style="margin:0 0 8px"><b>You found '+hits+' of 6 recommended fixes.</b></p>';
+    if(miss.length) out+='<p style="margin:0 0 4px">Also consider:</p><ul class="clean">'+miss.map(function(f){return '<li>'+f[0]+' <span class="tag">'+f[1]+'</span></li>';}).join('')+'</ul>';
+    if(bad.length) out+='<p style="margin:0 0 4px">Be careful with:</p><ul class="clean">'+bad.map(function(f){return '<li>'+f[0]+': this adds friction and distraction rather than removing it.</li>';}).join('')+'</ul>';
+    out+='<p style="margin:0;font-size:.92rem;color:var(--muted)">Each fix maps to one of the four high-impact areas: friction, value proposition, call to action, and trust. Then test each change rather than launching them all at once.</p>';
+    $('fixOut').innerHTML=out; $('fixOut').style.display='block';
+  });
+
+  // quiz
+  var Q=[
+    ['Which is NOT one of the six "design for usability" principles?',['Follow website conventions','Make it obvious what\'s clickable','Use as many colors as possible to stand out','Format content to support scanning'],2,'The six are conventions, visual hierarchy, clearly defined areas, obvious clickability, eliminating distractions, and formatting for scanning.'],
+    ['In conversion-centered design, "congruence" means...',['Every element on the page supports the same conversion goal','The page loads quickly','The page has customer reviews','The page looks the same on mobile and desktop'],0,'Congruence means copy, images and layout all point toward one goal. Credibility is the principle about reviews and trust.'],
+    ['A visitor lands on your page. Which is NOT one of the three questions the page should answer?',['What are you offering?','Why should I pick you?','How long has your company been in business?','What do you want me to do next?'],2,'Company history may help credibility, but the three questions are: what you offer, why pick you, and what to do next.'],
+    ['Best Buy shows "Your store: open until 9 pm" on its homepage. Which segment does this serve?',['Brand-loyal shoppers','In-store shoppers','Comparison shoppers','Searchers'],1,'Store hours and pickup options serve people who prefer to shop or pick up in person.'],
+    ['"Progressive enhancement" means...',['Designing for desktop, then removing features for mobile','Designing for small screens first, then adding content for larger screens','Improving page speed over time','Adding more pop-ups as the visitor scrolls'],1,'Mobile first starts with the smallest screen and adds features for larger screens. The reverse usually produces a cluttered mobile page.'],
+    ['Grip6 tested an original page and two variants at the same time. This is called...',['A multivariate test','An A/B/n test','A usability test','An existence test'],1,'More than two versions of one change is an A/B/n test. A multivariate test tests combinations of several elements.'],
+    ['In the Grip6 results, Variant 1 had the highest conversion rate. Why might Variant 2 still be the better choice?',['Variant 2 got more traffic','Variant 2 had the highest total value per session once email sign-ups are counted','Variant 2 had a higher AOV','Variant 1 had no conversions'],1,'Variant 2 delivered $2.44 total value per session vs. $2.36 for the others. Choose the metric that matches the business goal.'],
+    ['Hilton\'s ad promised a price match, free breakfast, room choice and free WiFi, but the landing page led with a summer sale. What\'s the problem?',['The page loads too slowly','Poor ad-to-landing-page message match','The page has no images','The ad was too short'],1,'When the page doesn\'t repeat what the ad promised, visitors feel lost. Message match is where many campaigns leak.'],
+    ['Removing an element from a page to see whether conversion changes is called...',['Existence testing','Multivariate testing','Progressive enhancement','Segmentation'],0,'Existence testing helps reduce clutter (friction): if removing something doesn\'t hurt results, it wasn\'t helping.'],
+    ['In the "Just Beachy Polo" test, adding a "Buy with Prime" button...',['Increased conversion by 28%','Had no effect','Decreased conversion by 41%','Increased revenue per visitor'],2,'The original won. A second button split attention. The variant also showed a different price, a reminder to change only one thing per test.']
+  ];
+  var score=0,done=0;
+  function buildQuiz(){
+    score=0;done=0;
+    $('quizBox').innerHTML=Q.map(function(q,i){
+      return '<div class="q" data-i="'+i+'"><p class="stem">'+(i+1)+'. '+q[0]+'</p><div class="choices">'+q[1].map(function(c,j){return '<button type="button" class="c" data-j="'+j+'">'+c+'</button>';}).join('')+'</div><div class="exp">'+q[3]+'</div></div>';
+    }).join('');
+    $('qTotal').textContent=Q.length; upd();
+  }
+  function upd(){$('qScore').textContent=score;$('qDone').textContent=done;}
+  $('quizBox').addEventListener('click',function(e){
+    var b=e.target.closest('button.c'); if(!b) return;
+    var box=b.closest('.q'); if(box.classList.contains('done')) return;
+    var q=Q[+box.dataset.i], j=+b.dataset.j;
+    box.querySelectorAll('button.c').forEach(function(x,k){x.disabled=true; if(k===q[2]) x.classList.add('right');});
+    if(j===q[2]) score++; else b.classList.add('wrong');
+    box.classList.add('done'); done++; upd();
+  });
+  $('qReset').addEventListener('click',function(){buildQuiz(); $('quiz').scrollIntoView();});
+  buildQuiz();
+})();
+</script>
+</body>
+</html>
